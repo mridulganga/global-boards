@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GBOARD PWA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='manifest' href='manifest.json'>
+</head>
+<body>
+    Select a board:
+    <input list="boards" id="board">
+    <datalist id="boards">
+      <option value="main">Main</option>
+    </datalist>
+    <hr>
+    <div id="board_body"></div><br>
+    <hr>
+    <textarea id="new_body"></textarea>
+    <button id="post">Submit</button>
+
+    <!-- Service Worker -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+            // Registration was successful
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, function(err) {
+            // registration failed :(
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+    </script>
+    
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase.js"></script>
+    <!-- Firebase Init -->
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyD7i-2JH3OhZhWNuLNx9mBSsnt2etX6D4w",
+        authDomain: "gaurav1-3baf8.firebaseapp.com",
+        databaseURL: "https://gaurav1-3baf8.firebaseio.com",
+        projectId: "gaurav1-3baf8",
+        storageBucket: "gaurav1-3baf8.appspot.com",
+        messagingSenderId: "1019568980639"
+    };
+    firebase.initializeApp(config);
+    </script>
+    <script>
+        var database = firebase.database();
+
+        firebase.database().ref('/boards').on('value',function(snapshot){
+          var keys = "";
+          for (var key in snapshot.val()){
+            keys += "<option value='" + key + "'>" + key + "</option>";
+          }
+          $("#boards").html(keys);
+        });
+
+        function load_board(board_name){
+          firebase.database().ref('/boards/' + board_name).on('value', 
+          function(snapshot) {
+              var val = snapshot.val();
+              $("#board_body").html(val["board_body"]);
+          });
+        }
+        // load main board once
+        load_board("main");
+
+
+        $("#post").click(function(){
+            var board_name = $("#board").val();
+            var board_body = $("#new_body").val();
+            firebase.database().ref('/boards/' + board_name).set({
+                "board_body": board_body.replace(new RegExp("\n", 'g'),"<br>"),
+            });
+        });
+
+        $("#board").change(function(){
+          load_board($("#board").val());
+        });
+
+    </script>
+
+
+
+
+</body>
+</html>
