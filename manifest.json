@@ -2,7 +2,7 @@
     "lang": "en-us",
     "name": "GBOARD APP",
     "scope": "/",
-    "start_url": "/",
+    "start_url": "",
     "short_name": "Gboard App",
     "description": "A PWA for testing global board",
     "theme_color" : "#2c3e50",
