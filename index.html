@@ -6,10 +6,31 @@
     <title>GBOARD PWA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='manifest' href='manifest.json'>
+    <link rel="stylesheet" href="bulma.css">
 </head>
 <body>
+
+  <nav class="navbar" role="navigation" aria-label="main navigation" style="background:#34495e; color:white;">
+    <div class="navbar-menu is-active">
+      <p class="navbar-item" style="font-weight:bold; color:white;">Board : </p>
+      <input type="text" id="board" list="boards" class="navbar-item" style="background:none; border:0; color:white;">
+    </div>
+  </nav>
+
+    <section class="section">
+      <div class="container">
+        <h1 class="title">
+          Hello World
+        </h1>
+        <p class="subtitle">
+          My first website with <strong>Bulma</strong>!
+        </p>
+      </div>
+    </section>
+
+
     Select a board:
-    <input list="boards" id="board">
+    <!-- <input list="boards" id="board"> -->
     <datalist id="boards">
       <option value="main">Main</option>
     </datalist>
@@ -82,6 +103,11 @@
         $("#board").change(function(){
           load_board($("#board").val());
         });
+
+        $("#board").click(function(){
+          $("#board").val("");
+          $("#board").focus();
+        })
 
     </script>
 
